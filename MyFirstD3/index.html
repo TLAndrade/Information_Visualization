@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exploring D3</title>
+    <script src="https://unpkg.com/d3@5.9.7/dist/d3.min.js"></script>
+</head>
+<body>
+    <svg width="600" height="250"></svg>
+    <script>
+        const width = 600;
+        const hight = 250;
+         
+        const svg = d3.select('svg');
+        svg.style("background-color",'white');
+
+        const circle = svg.append('circle')
+            .attr('r',100)
+            .attr('cx',width/2)
+            .attr('cy',hight/2)
+            .attr('fill','yellow');
+
+        const eyeSpacing = 40;
+        const eyeOffSet = 10;
+
+        const LeftEye = svg.append('circle')
+            .attr('r',10)
+            .attr('cx',width/2-eyeSpacing)
+            .attr('cy',hight/2-eyeOffSet)
+            .attr('fill','black');
+
+        const rightEye = svg.append('circle')
+            .attr('r',10)
+            .attr('cx',width/2+eyeSpacing)
+            .attr('cy',hight/2-eyeOffSet)
+            .attr('fill','black');
+
+        const mouth = svg.append('path')
+            .attr('d',arc(){
+                innerRadius: 80,
+                outerRadius: 100,
+                startAngle: 0,
+                endAngle: Math.PI
+            })
+
+
+        
+    </script>
+</body>
+</html>
