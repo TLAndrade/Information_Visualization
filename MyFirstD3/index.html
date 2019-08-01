@@ -13,35 +13,95 @@
         const svg = d3.select('svg');
         svg.style("background-color",'white');
 
-        const circle = svg.append('circle')
+        const g = svg.append('g')
+            .attr('transform','translate(300,150)')
+
+
+        const circle = g.append('circle')
             .attr('r',100)
-            .attr('cx',width/2)
-            .attr('cy',hight/2)
             .attr('fill','yellow');
 
         const eyeSpacing = 40;
-        const eyeOffSet = 10;
-
-        const LeftEye = svg.append('circle')
-            .attr('r',10)
-            .attr('cx',width/2-eyeSpacing)
-            .attr('cy',hight/2-eyeOffSet)
+        const eyeOffSet = 30;
+        let eyeRadius = 12;
+        const EyeBrownOffSet = -25 ;
+        const EyeBWidth = 27;
+        const EyeBHeight = 5;
+        
+        const eyesG = g.append('g')
+            .attr('transform','translate(0,-30)') //30 -> substituir por ${eyeOffset}
+           
+        const LeftEye = eyesG.append('circle')
+            .attr('r',eyeRadius)  
+            .attr('cx',-eyeSpacing)          
             .attr('fill','black');
 
-        const rightEye = svg.append('circle')
-            .attr('r',10)
-            .attr('cx',width/2+eyeSpacing)
-            .attr('cy',hight/2-eyeOffSet)
-            .attr('fill','black');
+        const rightEye = eyesG.append('circle')
+            .attr('r',eyeRadius)
+            .attr('cx',+eyeSpacing)
 
-        const mouth = svg.append('path')
-            .attr('d',arc(){
-                innerRadius: 80,
-                outerRadius: 100,
-                startAngle: 0,
-                endAngle: Math.PI
-            })
+        const mouth = g.append('path')
+            .attr('d',d3.arc()({
+                innerRadius: 55,
+                outerRadius: 60,
+                startAngle: Math.PI/2,
+                endAngle: 3*Math.PI/2
+            }));
 
+        const eyesBrownG = eyesG
+            .append('g')
+                .attr('transform','translate(0,-25)') //-25 -> ${EyeBrownOffSet}
+            
+        eyesBrownG    
+            .transition().duration(2000)
+                .attr('transform',"translate(0,-45)")
+            .transition().duration(2000)
+                .attr('transform','translate(0,-25)')
+
+        const EyebrownLeft = eyesG //mudar para eyesBrownG
+            .append('rect')
+                .attr('x',-EyeBWidth/2-eyeSpacing)
+                .attr('y',EyeBrownOffSet) //remover
+                .attr('width', EyeBWidth)
+                .attr('height',EyeBHeight)
+
+        const EyebrownRight = eyesG  //mudar para eyesBrownG
+            .append('rect')
+                .attr('x',-EyeBWidth/2+eyeSpacing)
+                .attr('y',EyeBrownOffSet) //remover
+                .attr('width', EyeBWidth)
+                .attr('height',EyeBHeight);
+
+        /*function winkle(){
+            rightEye.attr('r',0);
+            const EyeWinkle = eyesG
+                .append('rect')
+                    .attr('x',-EyeBWidth/2+eyeSpacing)
+                    .attr('y',0) 
+                    .attr('width', EyeBWidth)
+                    .attr('height',EyeBHeight);
+            EyeWinkle
+                .transition().duration(2000)
+                    .attr('x2',EyeBWidth/2+eyeSpacing+EyeBWidth-5)                   
+                    
+            rightEye.attr('r',eyeRadius);         
+        };
+        console.log("teste");
+        winkle();*/
+
+        repeat(); 
+
+        function repeat(){            
+            EyebrownRight
+                .transition().duration(2000)
+                    .attr('y',EyeBrownOffSet-10)
+                .transition().duration(2000)
+                    .attr('y',EyeBrownOffSet)
+                .on("end",repeat);
+            //winkle();
+                            
+        };
+           
 
         
     </script>
