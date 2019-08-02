@@ -2,17 +2,61 @@
 <html>
 <head>
     <title>Making a Bar Chart</title>
-    <script src='https://unpkg.com/d3@5.9.7/dist/d3.js'></script>
+    <script src="https://unpkg.com/d3@5.9.7/dist/d3.js"></script>
 </head>
 <body>
     <svg width="600" height="250"></svg>
     <script>
-        
-       
-       d3.csv('data.cvs')
-        
-        const unpkg = 'https://unpkg.com/d3@5.9.7/dist/d3.min.js'
-        
+        // TASKS:
+        //Representing a data table in JavaScript
+        //Creating rectangles for each row
+        //Using linear and band scales
+        // adding axes 
+
+        const width = +svg.attr('width');
+        const height = +svg.attr('height');
+
+        const render = data =>{
+            const xValue = d => d.population;
+            const yValue = d => d.country;
+            const margin = { top: 20, right:20, bottom: 20, left: 20};
+            const innerwidth = width - margin.right - margin.left;
+            const innerheight = height - margin.top - margin.botton;
+
+
+            const xScale = d3.scaleLinear()
+                .domain([0, d3.max(data,xValue)])
+                .range([0,innerwidth])
+                
+            //console.log(xScale.domain());
+            const yScale = d3.scaleBand()
+                .domain(map(yValue))
+                .range([0,innerheight])
+                .padding(0.1); // Espaço entre as barras
+           
+           
+            const g = svg.append('g')
+                .attr('transform',`translate(${margin.left},${margin.top})`)
+
+            g.select('g').call(d3.axisLeft(yScale)); //Passa uma função com d3.select como input. 
+            //Outra maneira: yAxis(g.append('g')) // const yAxis = d3.axisLeft(yScale)
+            g.select('g').call(d3.axisBottom(xScale))
+                .attr('translate', `transform(0,${innerheight})`)
+
+
+            svg.selectALL('rect').data(data)
+                .attr('y', d => ySvale(yValue(d)))
+                .attr('width', d => xScale(xValue(d))) //xScale é uma função com input 'data'-> d.population 
+                .attr('height',yScale.bandwidth());
+        };
+
+        d3.csv('data.csv').then(data => { //promise
+           data.forEach(d => {
+                d.population = +d.population; // + transforma string em int
+           });
+           render(data);
+       });       
+
     </script>
 </body>
 </html>
